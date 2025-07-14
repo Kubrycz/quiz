@@ -4,7 +4,6 @@ import Timer from "../components/Timer";
 import React, { useState } from "react";
 import { sampleQuestions } from "../components/questions";
 
-
 const QuestionPage = () => {
   const { category, id } = useParams<{ category: string; id: string }>();
   const navigate = useNavigate();
@@ -21,6 +20,7 @@ const QuestionPage = () => {
 
     const isCorrect = answer === questionData.correct;
 
+
     console.log(`Answer: ${answer}`);
     console.log(`Correct answer: ${questionData.correct}`);
     console.log(`Is Correct: ${isCorrect}`);
@@ -28,8 +28,8 @@ const QuestionPage = () => {
       `Question Index: ${questionIndex}, Total Questions: ${questions.length}`
     );
 
-    setScore((prevScore) => {
-      const newScore = isCorrect ? prevScore + 1 : prevScore;
+    setScore(() => {
+      const newScore = isCorrect ? score + 1 : score;
       console.log(`Updated Score: ${newScore}`);
 
       // Jeśli to ostatnie pytanie, zapisujemy wynik do localStorage i przechodzimy do wyników
@@ -46,7 +46,7 @@ const QuestionPage = () => {
       return newScore;
     });
 
-    setSelectAnswers((prev) => [...prev, answer]);
+    setSelectAnswers(() => [...selectAnswers, answer]);
   };
 
   const whateverFunc = () => {};
