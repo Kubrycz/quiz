@@ -1,5 +1,4 @@
 import CategoryButton from "../components/CategoryButton";
-import React from "react";
 
 const categories = [
   { name: "Matematyka", color: "bg-red-500" },

@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import Question from "../components/Question";
 import Timer from "../components/Timer";
-import React, { useState } from "react";
 import { sampleQuestions } from "../components/questions";
+import { useState } from "react";
 
 const QuestionPage = () => {
   const { category, id } = useParams<{ category: string; id: string }>();
