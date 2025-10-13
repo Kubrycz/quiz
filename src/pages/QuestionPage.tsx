@@ -33,8 +33,8 @@ const QuestionPage = () => {
   });
 
   const handleAnswer = (answer: string) => {
-    const isCorrect = answer === betterQuestion.correct;
-    if (betterQuestion.id < idOfLastAsNumber) {
+    const isCorrect = answer === betterCaregory.correct;
+    if (betterCaregory.id < idOfLastAsNumber) {
       if (isCorrect) {
         setScore(() => {
           console.log(`Updated Score: ${newScore}`);
@@ -51,59 +51,65 @@ const QuestionPage = () => {
           // }
 
           navigate(
-            `/quiz/${betterQuestion.category}/question/${nextQuestion + 1}`
+            `/quiz/${betterCaregory.category}/question/${nextQuestion + 1}`
           );
           return newScore;
         });
       } else {
         navigate(
-          `/quiz/${betterQuestion.category}/question/${nextQuestion + 1}`
+          `/quiz/${betterCaregory.category}/question/${nextQuestion + 1}`
         );
       }
     } else {
       setTimeout(() => {
         localStorage.setItem(
-          `quiz_${betterQuestion.category}_score`,
+          `quiz_${betterCaregory.category}_score`,
           newScore.toString()
         );
       }, 100);
-      navigate(`/results/${betterQuestion.category}`);
+      navigate(`/results/${betterCaregory.category}`);
     }
 
     setSelectAnswers(() => [...selectAnswers, answer]);
   };
 
   const whateverFunc = () => {
-    if (betterQuestion.id === idOfLastQuestion) {
-      navigate(`/results/${betterQuestion.category}`);
+    if (betterCaregory.id === idOfLastQuestion) {
+      navigate(`/results/${betterCaregory.category}`);
     } else {
-      navigate(`/quiz/${betterQuestion.category}/question/${nextQuestion + 1}`);
+      navigate(`/quiz/${betterCaregory.category}/question/${nextQuestion + 1}`);
     }
   };
 
   const betterCaregory = getQuestions.filter((y) => {
     const catStr = category?.toString();
-    const cStr = y.category.toString();
 
-    return catStr === cStr;
+    const correctCategory = y.category === catStr;
+    const correctId = y.id.toString() === id?.toString();
+
+    return correctCategory && correctId;
   })[0];
 
-  const betterQuestion = getQuestions.filter((x) => {
-    const idStr = id?.toString();
-    const valStr = x.id.toString();
+  const betterBetterCategories = getQuestions.filter((y) => {
+    const catStr = category?.toString();
 
-    return idStr === valStr;
+    return catStr === y.category;
+  });
+
+  const question = betterBetterCategories.filter((y) => {
+    const catStr = category?.toString();
+
+    return id === y.id.toString();
   })[0];
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
       <div>
         <Timer startTime={5} onTimeout={whateverFunc} key={nextQuestion} />
       </div>
-      {betterQuestion ? (
+      {betterCaregory ? (
         <Question
-          question={betterQuestion.question}
-          answers={betterQuestion.answers}
+          question={betterCaregory.question}
+          answers={betterCaregory.answers}
           onAnswer={handleAnswer}
         />
       ) : (
