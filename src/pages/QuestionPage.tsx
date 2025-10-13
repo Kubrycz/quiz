@@ -12,9 +12,14 @@ const QuestionPage = () => {
   const [selectAnswers, setSelectAnswers] = useState<string[]>([]);
   const [getQuestions, setQuestions] = useState<Questions[]>([]);
   const { id } = useParams();
+  const { category } = useParams();
   const nextQuestion = Number(id);
   const isCorrect = true;
   const newScore = isCorrect ? score + 1 : score;
+
+  const test = getQuestions.sort((x) => x.id);
+  const idOfLastQuestion = test[test.length - 1]?.id;
+  const idOfLastAsNumber = Number(idOfLastQuestion);
 
   useEffect(() => {
     async function getData() {
@@ -28,10 +33,6 @@ const QuestionPage = () => {
   });
 
   const handleAnswer = (answer: string) => {
-    const test = getQuestions.sort((x) => x.id);
-    const idOfLastQuestion = test[test.length - 1]?.id;
-    const idOfLastAsNumber = Number(idOfLastQuestion);
-    
     const isCorrect = answer === betterQuestion.correct;
     if (betterQuestion.id < idOfLastAsNumber) {
       if (isCorrect) {
@@ -68,12 +69,24 @@ const QuestionPage = () => {
       }, 100);
       navigate(`/results/${betterQuestion.category}`);
     }
+
     setSelectAnswers(() => [...selectAnswers, answer]);
   };
 
   const whateverFunc = () => {
-    navigate(`/quiz/${betterQuestion.category}/question/${nextQuestion + 1}`);
+    if (betterQuestion.id === idOfLastQuestion) {
+      navigate(`/results/${betterQuestion.category}`);
+    } else {
+      navigate(`/quiz/${betterQuestion.category}/question/${nextQuestion + 1}`);
+    }
   };
+
+  const betterCaregory = getQuestions.filter((y) => {
+    const catStr = category?.toString();
+    const cStr = y.category.toString();
+
+    return catStr === cStr;
+  })[0];
 
   const betterQuestion = getQuestions.filter((x) => {
     const idStr = id?.toString();
