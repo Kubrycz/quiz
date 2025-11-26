@@ -1,6 +1,6 @@
 export default interface Questions{
     id: number;
-    category: string;
+    categoryId: number;
     question: string;
     answers: [string, string, string, string];
     correct: string;

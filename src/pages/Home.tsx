@@ -1,21 +1,32 @@
+import { useEffect, useState } from "react";
 import CategoryButton from "../components/CategoryButton";
-
-const categories = [
-  { name: "Matematyka", color: "bg-red-500" },
-  { name: "Geografia", color: "bg-blue-500" },
-  { name: "Historia", color: "bg-green-500" },
-  { name: "Fizyka", color: "bg-yellow-500" },
-  { name: "Chemia", color: "bg-purple-500" },
-  { name: "Biologia", color: "bg-pink-500" },
-];
+import Category from "../models/category";
+import { categoryApi } from "../data/category";
 
 const Home = () => {
+  const [getCategory, setCategory] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function getData() {
+      if (getCategory.length <= 0) {
+        const response = await categoryApi();
+        1;
+        setCategory(response);
+      }
+    }
+    getData();
+  });
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-4">
       <h1 className="text-5xl font-bold mb-8 text-blue-400">QUIZ</h1>
       <div className="grid grid-cols-2 gap-4 w-full max-w-xl">
-        {categories.map(({ name, color }) => (
-          <CategoryButton key={name} name={name} color={color} />
+        {getCategory.map((value) => (
+          <CategoryButton
+            key={value.id}
+            name={value.category}
+            color={value.color}
+          />
         ))}
       </div>
     </div>
