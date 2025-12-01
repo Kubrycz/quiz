@@ -34,7 +34,7 @@ Każde pytanie ma licznik, który po upływie czasu przekierowuje nas do wyniku 
 
 Kliknij w obrazek, aby zobaczyć aplikację na żywo:  
 
-[![Strona główna aplikacji](assets/home.jpg)](https://quiz-app-kubrycz.vercel.app/)
+[![Strona główna aplikacji](src/assets/home.jpg)](https://quiz-app-kubrycz.vercel.app/)
 
 ---
 
