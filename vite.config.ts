@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [tailwindcss()],
+  plugins: [tailwindcss("./tailwind.config.js")],
   build: {
     outDir: "dist", // upewnij się, że to jest 'dist'
   },

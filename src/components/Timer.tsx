@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 interface TimerProps{
     startTime: number;
-    onTimeout: () => void;
+  onTimeout: () => void;
 }
 const Timer: React.FC<TimerProps> = ({ startTime, onTimeout }) => {
   const [timeLeft, setTimeLeft] = useState(startTime);

@@ -1,64 +1,104 @@
-import { useParams, useNavigate } from "react-router-dom";
+// import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Question from "../components/Question";
+import { questions } from "../data/questions";
+import { Questions } from "../models/questions";
+import { Category } from "../models/category";
+
+import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../components/Timer";
-import { sampleQuestions } from "../components/questions";
-import { useState } from "react";
+import { categories } from "../data/category";
 
 const QuestionPage = () => {
-  const { category, id } = useParams<{ category: string; id: string }>();
   const navigate = useNavigate();
-  const questions =
-    sampleQuestions[category as keyof typeof sampleQuestions] || [];
-  const questionIndex = Number(id) - 1;
-  const questionData = questions[questionIndex];
-
-  const [selectAnswers, setSelectAnswers] = useState<string[]>([]);
   const [score, setScore] = useState(0);
+  const [selectAnswers, setSelectAnswers] = useState<string[]>([]);
+  const [getQuestions, setQuestions] = useState<Questions[]>([]);
+  const [getCategory, setCategory] = useState<Category[]>([]);
+  const { id } = useParams();
+  const { category } = useParams();
+  const nextQuestion = Number(id);
+  const isCorrect = true;
+  const newScore = isCorrect ? score + 1 : score;
+
+  // const [categoryContainer, setCategoryContainer] = useState("");
+
+  const categoryThis = getCategory.find((x) => x.category === category);
+  if (!categoryThis) {
+    console.log("Kategoria nie istnieje");
+    //return;
+  }
+  const questionsInCategory = getQuestions.filter(
+    (x) => x.categoryId === Number(categoryThis?.id)
+  );
+
+  const lastQuestion = questionsInCategory.sort((a, b) => b.id - a.id)[0];
+  const idOfLastQuestion = lastQuestion?.id;
+
+  useEffect(() => {
+    async function getData() {
+      const [q, c] = await Promise.all([questions(), categories()]);
+      setQuestions(q);
+      setCategory(c);
+    }
+    getData();
+  }, []);
 
   const handleAnswer = (answer: string) => {
-    if (!questionData) return; // Jeśli pytanie nie istnieje, nie rób nic
-
-    const isCorrect = answer === questionData.correct;
-
-
-    console.log(`Answer: ${answer}`);
-    console.log(`Correct answer: ${questionData.correct}`);
-    console.log(`Is Correct: ${isCorrect}`);
-    console.log(
-      `Question Index: ${questionIndex}, Total Questions: ${questions.length}`
-    );
-
-    setScore(() => {
-      const newScore = isCorrect ? score + 1 : score;
-      console.log(`Updated Score: ${newScore}`);
-
-      // Jeśli to ostatnie pytanie, zapisujemy wynik do localStorage i przechodzimy do wyników
-      if (questionIndex + 1 === questions.length) {
-        // setTimeout(() => {
-        localStorage.setItem(`quiz_${category}_score`, newScore.toString()); // Zapisujemy bez przeliczania na %
-        console.log(`Final Score saved: ${newScore} pkt`);
-        navigate(`/results/${category}`);
-        // }, 100); // 🔹 Krótkie opóźnienie, aby `setScore` zdążyło się zaktualizować
+    const isCorrect = answer === idOfActualQuestion.correct;
+    if (idOfActualQuestion.id < Number(idOfLastQuestion)) {
+      if (isCorrect) {
+        setScore(() => {
+          console.log(`Updated Score: ${newScore}`);
+          navigate(
+            `/quiz/${categoryThis?.category}/question/${nextQuestion + 1}`
+          );
+          return newScore;
+        });
       } else {
-        navigate(`/quiz/${category}/question/${questionIndex + 2}`);
+        navigate(
+          `/quiz/${categoryThis?.category}/question/${nextQuestion + 1}`
+        );
       }
-
-      return newScore;
-    });
-
+    } else {
+      setTimeout(() => {
+        localStorage.setItem(
+          `quiz_${categoryThis?.category}_score`,
+          newScore.toString()
+        );
+      }, 100);
+      navigate(`/results/${categoryThis?.category}`);
+    }
     setSelectAnswers(() => [...selectAnswers, answer]);
   };
 
-  const whateverFunc = () => {};
+  const whateverFunc = () => {
+    if (idOfActualQuestion.id === Number(idOfLastQuestion)) {
+      navigate(`/results/${categoryThis?.category}`);
+    } else {
+      navigate(`/quiz/${categoryThis?.category}/question/${nextQuestion + 1}`);
+    }
+  };
+
+  const idOfActualQuestion = getQuestions.filter((y) => {
+    const correctId = y.id.toString() === id;
+    return correctId;
+  })[0];
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
-      <Timer startTime={5} onTimeout={whateverFunc} />
-      <Question
-        question={questionData.question}
-        answers={questionData.answers}
-        onAnswer={handleAnswer}
-      />
+      <div>
+        <Timer startTime={5} onTimeout={whateverFunc} key={nextQuestion} />
+      </div>
+      {idOfActualQuestion ? (
+        <Question
+          question={idOfActualQuestion.question}
+          answers={idOfActualQuestion.answers}
+          onAnswer={handleAnswer}
+        />
+      ) : (
+        <div>LOADING ...</div>
+      )}
     </div>
   );
 };

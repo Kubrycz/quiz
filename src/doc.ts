@@ -18,7 +18,6 @@ React - frontend
 Ts - język
 React Router - nawigacja stron
 useReducer, useContext - zarządznie stanem
-Convex/Firebase - pobieranie pytań
 Tailwind - css
 
 ........................................................................................................................................................................
@@ -44,7 +43,5 @@ przechowywanie pytań:
 licznik czasu:
 useEffect + setTimeout
 jeśli czas się skończy, przechodzimy do następnego pyt.
-
-
 
 */
