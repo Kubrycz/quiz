@@ -1,4 +1,5 @@
-import Questions from "../models/questions";
+import { Questions, QuestionsSchema } from "../models/questions";
+import { z } from "zod";
 
 export async function questions(): Promise<Questions[]> {
   const baseUrl = "https://68c0430a0b196b9ce1c3ceb4.mockapi.io/";
@@ -10,9 +11,13 @@ export async function questions(): Promise<Questions[]> {
   if (!res.ok) {
     throw new Error(`Błąd pobierania: ${res.status}`);
   }
+  const data = await res.json();
+  
+  const questions = z.array(QuestionsSchema).parse(data);
+  return questions;
 
-  const data: Questions[] = await res.json();
-  return data;
+  // const data: Questions[] = await res.json();
+  // return data;
 }
 // export const sampleQuestions = {
 //   matematyka: [

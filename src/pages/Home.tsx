@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import CategoryButton from "../components/CategoryButton";
-import Category from "../models/category";
-import { categoryApi } from "../data/category";
+import { Category } from "../models/category";
+import { categories } from "../data/category";
+
 
 const Home = () => {
   const [getCategory, setCategory] = useState<Category[]>([]);
@@ -9,7 +10,7 @@ const Home = () => {
   useEffect(() => {
     async function getData() {
       if (getCategory.length <= 0) {
-        const response = await categoryApi();
+        const response = await categories();
         1;
         setCategory(response);
       }

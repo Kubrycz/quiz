@@ -1,10 +1,10 @@
 //Strona quizu
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Questions from "../models/questions";
-import Category from "../models/category";
 import { questions } from "../data/questions";
-import { categoryApi } from "../data/category";
+import { categories } from "../data/category";
+import { Questions } from "../models/questions";
+import { Category } from "../models/category";
 
 const Quiz = () => {
   const [getCategory, setCategory] = useState<Category[]>([]);
@@ -26,7 +26,7 @@ const Quiz = () => {
   useEffect(() => {
     async function getData() {
       if (getCategory.length <= 0) {
-        const response = await categoryApi();
+        const response = await categories();
         1;
         setCategory(response);
       }

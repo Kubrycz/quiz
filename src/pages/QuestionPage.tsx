@@ -2,11 +2,12 @@
 import { useEffect, useState } from "react";
 import Question from "../components/Question";
 import { questions } from "../data/questions";
-import { categoryApi } from "../data/category";
-import Questions from "../models/questions";
+import { Questions } from "../models/questions";
+import { Category } from "../models/category";
+
 import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../components/Timer";
-import Category from "../models/category";
+import { categories } from "../data/category";
 
 const QuestionPage = () => {
   const navigate = useNavigate();
@@ -20,74 +21,67 @@ const QuestionPage = () => {
   const isCorrect = true;
   const newScore = isCorrect ? score + 1 : score;
 
-  const categoryThis = getCategory.find((x) => x.category === category);
+  // const [categoryContainer, setCategoryContainer] = useState("");
 
-  const test = getQuestions
-    .filter((x) => x.categoryId === categoryThis?.id)
-    .sort((a, b) => b.id - a.id);
-  const idOfLastQuestion = test[0]?.id;
-  console.log("PARAMS category:", category);
-  console.log("Category list:", getCategory);
+  const categoryThis = getCategory.find((x) => x.category === category);
+  if (!categoryThis) {
+    console.log("Kategoria nie istnieje");
+    //return;
+  }
+  const questionsInCategory = getQuestions.filter(
+    (x) => x.categoryId === Number(categoryThis?.id)
+  );
+
+  const lastQuestion = questionsInCategory.sort((a, b) => b.id - a.id)[0];
+  const idOfLastQuestion = lastQuestion?.id;
 
   useEffect(() => {
     async function getData() {
-      if (getQuestions.length <= 0) {
-        const response = await questions();
-        1;
-        setQuestions(response);
-      }
-      if (getCategory.length <= 0) {
-        const response1 = await categoryApi();
-        1;
-        setCategory(response1);
-      }
+      const [q, c] = await Promise.all([questions(), categories()]);
+      setQuestions(q);
+      setCategory(c);
     }
     getData();
   }, []);
 
-  useEffect(() => {
-    async function getData() {
-      if (getCategory.length <= 0) {
-        const response = await categoryApi();
-        1;
-        setCategory(response);
-      }
-    }
-    getData();
-  });
-
   const handleAnswer = (answer: string) => {
-    const isCorrect = answer === betterCaregory.correct;
-    if (betterCaregory.id < idOfLastQuestion) {
+    const isCorrect = answer === idOfActualQuestion.correct;
+    if (idOfActualQuestion.id < Number(idOfLastQuestion)) {
       if (isCorrect) {
         setScore(() => {
           console.log(`Updated Score: ${newScore}`);
-          navigate(`/quiz/${categoryThis}/question/${nextQuestion + 1}`);
+          navigate(
+            `/quiz/${categoryThis?.category}/question/${nextQuestion + 1}`
+          );
           return newScore;
         });
       } else {
-        navigate(`/quiz/${categoryThis}/question/${nextQuestion + 1}`);
+        navigate(
+          `/quiz/${categoryThis?.category}/question/${nextQuestion + 1}`
+        );
       }
     } else {
       setTimeout(() => {
-        localStorage.setItem(`quiz_${categoryThis}_score`, newScore.toString());
+        localStorage.setItem(
+          `quiz_${categoryThis?.category}_score`,
+          newScore.toString()
+        );
       }, 100);
-      navigate(`/results/${categoryThis}`);
+      navigate(`/results/${categoryThis?.category}`);
     }
-
     setSelectAnswers(() => [...selectAnswers, answer]);
   };
 
   const whateverFunc = () => {
-    if (betterCaregory?.id === idOfLastQuestion) {
+    if (idOfActualQuestion.id === Number(idOfLastQuestion)) {
       navigate(`/results/${categoryThis?.category}`);
     } else {
       navigate(`/quiz/${categoryThis?.category}/question/${nextQuestion + 1}`);
     }
   };
 
-  const betterCaregory = getQuestions.filter((y) => {
-    const correctId = y.id?.toString() === id;
+  const idOfActualQuestion = getQuestions.filter((y) => {
+    const correctId = y.id.toString() === id;
     return correctId;
   })[0];
 
@@ -96,10 +90,10 @@ const QuestionPage = () => {
       <div>
         <Timer startTime={5} onTimeout={whateverFunc} key={nextQuestion} />
       </div>
-      {betterCaregory ? (
+      {idOfActualQuestion ? (
         <Question
-          question={betterCaregory.question}
-          answers={betterCaregory.answers}
+          question={idOfActualQuestion.question}
+          answers={idOfActualQuestion.answers}
           onAnswer={handleAnswer}
         />
       ) : (
