@@ -40,22 +40,25 @@ Kliknij w obrazek, aby zobaczyć aplikację na żywo:
 
 ## ✨ Struktura projektu
 
+```
 src/
 ├─ components/
-│ ├─ CategoryButton.tsx
-│ ├─ Question.tsx
-│ ├─ Timer.tsx
+│  ├─ CategoryButton.tsx
+│  ├─ Question.tsx
+│  ├─ Timer.tsx
 ├─ data/
-│ ├─ category.ts
-│ ├─ questions.ts
+│  ├─ category.ts
+│  ├─ questions.ts
 ├─ models/
-│ ├─ category.ts
-│ ├─ questions.ts
+│  ├─ category.ts
+│  ├─ questions.ts
 ├─ pages/
-│ ├─ Home.tsx
-│ ├─ QuestionPage.tsx
-│ ├─ Quiz.tsx
-│ ├─ Results.tsx
+│  ├─ Home.tsx
+│  ├─ QuestionPage.tsx
+│  ├─ Quiz.tsx
+│  ├─ Results.tsx
 ├─ App.tsx
 ├─ doc.ts
 ├─ main.ts
+```
+
