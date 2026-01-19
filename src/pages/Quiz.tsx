@@ -1,4 +1,3 @@
-//Strona quizu
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { questions } from "../data/questions";

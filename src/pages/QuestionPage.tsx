@@ -1,10 +1,8 @@
-// import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Question from "../components/Question";
 import { questions } from "../data/questions";
 import { Questions } from "../models/questions";
 import { Category } from "../models/category";
-
 import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../components/Timer";
 import { categories } from "../data/category";
@@ -21,12 +19,9 @@ const QuestionPage = () => {
   const isCorrect = true;
   const newScore = isCorrect ? score + 1 : score;
 
-  // const [categoryContainer, setCategoryContainer] = useState("");
-
   const categoryThis = getCategory.find((x) => x.category === category);
   if (!categoryThis) {
     console.log("Kategoria nie istnieje");
-    //return;
   }
   const questionsInCategory = getQuestions.filter(
     (x) => x.categoryId === Number(categoryThis?.id)
