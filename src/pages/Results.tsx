@@ -1,4 +1,3 @@
-//Strona z wynikiem
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -8,30 +7,22 @@ const Results = () => {
   const [score, setScore] = useState<number | null>(null);
 
   useEffect(() => {
-    console.log("Category:", category); // Sprawdzenie, czy category jest poprawne
+    console.log("Category:", category); 
 
     if (!category) {
       console.error("Brak kategorii w URL!");
       navigate("/");
       return;
     }
-
     //Pobieramy wynik z localStorage
     const storedScore = localStorage.getItem(`quiz_${category}_score`);
     if (storedScore !== null) {
       setScore(Number(storedScore));
     } else {
       console.log("There was no score, sad monkey");
-      navigate("/"); //Jeśli nie ma wyniku wracamy na stronę główną
+      navigate("/"); 
     }
-  }, [category, navigate]); //useEffect - wykonuje się za każdym razem, gdy zmieni się category lub navigate.
-  // Odpala się po załadowaniu komponentu, pobiera wynik quizu z localstorage i sprawdza czy wynik istnieje
-  // local.storage.getItem() pobiera zapisane watrości z przeglądatki,
-  // każdy wynik jest zapisany pod kluczem quiz/matematyka_score itd.
-  // jeśli nie rozwiązał quizu zwróci null.
-
-  //localStorage to wbudowana pamięć przeglądarki, w której możemy przechowywać dane na stąłe.
-
+  }, [category, navigate]);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
       <h1 className="text-3xl font-bold mb-4">Twój wynik</h1>

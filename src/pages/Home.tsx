@@ -3,7 +3,6 @@ import CategoryButton from "../components/CategoryButton";
 import { Category } from "../models/category";
 import { categories } from "../data/category";
 
-
 const Home = () => {
   const [getCategory, setCategory] = useState<Category[]>([]);
 

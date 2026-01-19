@@ -13,7 +13,4 @@ export async function categories(): Promise<Category[]> {
   const categories = z.array(CategorySchema).parse(data);
 
   return categories;
-
-  // const data: Category[] = await res.json();
-  // return data;
 }

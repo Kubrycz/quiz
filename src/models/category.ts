@@ -1,9 +1,3 @@
-// export default interface Category{
-//     category: string;
-//     color: string;
-//     id: number;
-// }
-
 import { z } from "zod";
 
 export const CategorySchema = z.object({
